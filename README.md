@@ -17,8 +17,6 @@ Works well with containerized [icecast2](https://icecast.org/): [pltnk/docker-ic
   - GitHub Packages `docker pull ghcr.io/d3m0nz/liquidsoap`
 - Build the image yourself
   - `docker build -t d3m0nz/liquidsoap github.com/d3m0nz/docker-liquidsoap`
-  - Add build arg `LIQUIDSOAP_VERSION` to specify the version of Liquidsoap to use in the image, check available versions [here](https://opam.ocaml.org/packages/liquidsoap/). \
-  Example: `docker build -t d3m0nz/liquidsoap:1.4.4 --build-arg LIQUIDSOAP_VERSION=1.4.4 github.com/d3m0nz/docker-liquidsoap`
 
 ### Configuration
 - Mount your Liquidsoap script file to `/data/liquidsoap/script.liq`
