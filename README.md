@@ -15,21 +15,20 @@ Works well with containerized [icecast2](https://icecast.org/): [pltnk/docker-ic
 - Pull the image from one of public Docker registries, supported tags: `latest`
   - Docker Hub `docker pull d3m0nz/liquidsoap`
   - GitHub Packages `docker pull ghcr.io/d3m0nz/liquidsoap`
-  - Quay.io `docker pull quay.io/d3m0nz/liquidsoap`
 - Build the image yourself
   - `docker build -t d3m0nz/liquidsoap github.com/d3m0nz/docker-liquidsoap`
   - Add build arg `LIQUIDSOAP_VERSION` to specify the version of Liquidsoap to use in the image, check available versions [here](https://opam.ocaml.org/packages/liquidsoap/). \
   Example: `docker build -t d3m0nz/liquidsoap:1.4.4 --build-arg LIQUIDSOAP_VERSION=1.4.4 github.com/d3m0nz/docker-liquidsoap`
 
 ### Configuration
-- Mount your Liquidsoap script file to `/etc/liquidsoap/script.liq`
+- Mount your Liquidsoap script file to `/data/liquidsoap/script.liq`
 - Mount your music directory to `/music`
 - In your Liquidsoap script change path to your music directory to `/music`
 
 #### docker run
 ```
 docker run --name liquidsoap -d --restart=always \
---volume /path/to/your/script.liq:/etc/liquidsoap/script.liq \
+--volume /path/to/your/script.liq:/data/liquidsoap/script.liq \
 --volume /path/to/your/music:/music \
 d3m0nz/liquidsoap
 ```
@@ -40,7 +39,7 @@ liquidsoap:
   container_name: liquidsoap
   restart: always
   volumes:
-    - /path/to/your/script.liq:/etc/liquidsoap/script.liq
+    - /path/to/your/script.liq:/data/liquidsoap/script.liq
     - /path/to/your/music:/music
 ```
 Add cronjob
