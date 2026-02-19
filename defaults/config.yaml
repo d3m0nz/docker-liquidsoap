@@ -1,0 +1,13 @@
+directory: /music
+library: /data/beets/musiclibrary.db
+
+plugins:
+  - random
+
+import:
+  autotag: no
+  write: no
+  move: no
+  copy: no
+  quiet: yes
+  resume: no

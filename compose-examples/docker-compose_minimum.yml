@@ -1,11 +1,10 @@
-version: "3"
-
 services:
 
   liquidsoap:
-    image: pltnk/liquidsoap
+    image: d3m0nz/liquidsoap:latest
     container_name: liquidsoap
     restart: always
     volumes:
-      - /path/to/your/script.liq:/etc/liquidsoap/script.liq
+      - /path/to/your/script.liq:/data/liquidsoap/script.liq
       - /path/to/your/music:/music
+

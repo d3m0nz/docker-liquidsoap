@@ -1,49 +1,35 @@
-FROM ubuntu:focal
+FROM debian:bookworm-slim
 
-LABEL maintainer="Kirill Plotnikov <init@pltnk.dev>" \
-      github="https://github.com/pltnk/docker-liquidsoap"
+LABEL maintainer="Dirty D3M0Nz" \
+      github="https://github.com/d3m0nz/docker-liquidsoap"
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV BEETS_CONFIG=/data/beets/config.yaml
+ENV BEETS_LIBRARY=/data/beets/musiclibrary.db
 
-# install liquidsoap dependencies
-RUN apt update && apt upgrade -y && \
-    apt install -y \
-    opam \
-    gcc \
-    libmad0-dev \
-    libmp3lame-dev \
-    libogg-dev \
-    libpcre3-dev \
-    libsamplerate0-dev \
-    libtag1-dev \
-    libvorbis-dev \
-    m4 \
-    make \
-    pkg-config \
-    zlib1g-dev && \
-    apt autoremove && apt clean && \
+RUN apt update && \
+    apt install -y --no-install-recommends \
+        liquidsoap \
+        beets \
+        ca-certificates \
+        curl && \
     rm -rf /var/lib/apt/lists/*
 
-# add user for liquidsoap and create necessary directories
+# Create user + directories
 RUN groupadd -g 999 radio && \
-    useradd -m -r -u 999 -s /bin/bash -g radio radio && \
-    mkdir /etc/liquidsoap /music && \
-    chown -R radio /etc/liquidsoap /music
+    useradd -m -r -u 999 -g radio -s /bin/bash radio && \
+    mkdir -p /data/beets /data/liquidsoap /data/ids /music /defaults && \
+    chown -R radio:radio /data /music
 
-ARG LIQUIDSOAP_VERSION
-ARG OPAM_PACKAGES="liquidsoap${LIQUIDSOAP_VERSION:+.$LIQUIDSOAP_VERSION} taglib mad lame vorbis cry samplerate"
+# Copy configs
+COPY defaults/config.yaml /defaults/config.yaml
+
+COPY entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh && \
+    chown radio:radio /entrypoint.sh
 
 USER radio
+WORKDIR /data
 
-# setup opam
-RUN opam init -a -y --disable-sandboxing && \
-    eval $(opam env) && \
-    opam install -y depext
-
-# install liquidsoap
-RUN opam depext -y ${OPAM_PACKAGES} && \
-    opam install -y ${OPAM_PACKAGES} && \
-    eval $(opam env) && \
-    opam clean -acryv --logs --unused-repositories
-
-CMD eval $(opam env) && liquidsoap /etc/liquidsoap/script.liq
+ENTRYPOINT ["/entrypoint.sh"]
